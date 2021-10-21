@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:familicious/managers/auth_manager.dart';
+import 'package:familicious/views/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:unicons/unicons.dart';
@@ -23,9 +25,13 @@ class _CreateAccountViewState extends State<CreateAccountView> {
 
   final TextEditingController _passwordController = TextEditingController();
 
+  final AuthManager _authManager = AuthManager();
+
   File? _imageFile;
 
   final ImagePicker _imagePicker = ImagePicker();
+
+   bool _isLoading = false;
 
   final emailRegexp = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9)+\.[a-zA-Z]+");
 
@@ -59,6 +65,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -180,35 +187,76 @@ class _CreateAccountViewState extends State<CreateAccountView> {
               const SizedBox(
                 height: 25,
               ),
-              TextButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      String name = _nameController.text;
-                      String email = _emailController.text;
-                      String password = _passwordController.text;
-                    } else {
-                      //validation failed
-                      Fluttertoast.showToast(
-                          msg: "Please check Input field(s)",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    }
-                  },
-                  style: TextButton.styleFrom(
-                      backgroundColor: Theme.of(context)
-                          .buttonTheme
-                          .colorScheme!
-                          .background),
-                  child: Text('Create Account',
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          color: Theme.of(context)
+              _authManager.isLoading
+                  ? Center(child: const CircularProgressIndicator.adaptive())
+                  : TextButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String name = _nameController.text;
+                          String email = _emailController.text;
+                          String password = _passwordController.text;
+                          //true
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          bool isCreated = await _authManager.createNewUser(
+                              name: name,
+                              email: email,
+                              password: password,
+                              imageFile: _imageFile!);
+                          //false isloading
+                          if (isCreated) {
+                            setState(() {
+                            _isLoading = false;
+                          });
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => const HomeView()),
+                                (route) => false);
+                            Fluttertoast.showToast(
+                                msg: "Welcome!, $name",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: _authManager.message,
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          }
+                        } else {
+                          //validation failed
+                          Fluttertoast.showToast(
+                              msg: "Please check Input field(s)",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                          backgroundColor: Theme.of(context)
                               .buttonTheme
                               .colorScheme!
-                              .primary)))
+                              .background),
+                      child: Text('Create Account',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(
+                                  color: Theme.of(context)
+                                      .buttonTheme
+                                      .colorScheme!
+                                      .primary)),)
             ],
           ),
         ),
