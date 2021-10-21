@@ -17,3 +17,4 @@ samples, guidance on mobile development, and a full API reference.
 # social_media_example_with_flutter-firebase
 
 added firebase store, cloud storage, firebase auth to the pubsec.yaml file and the index.html file in the web.
+change the build.gradle in the app/src folder min sdk to 21
