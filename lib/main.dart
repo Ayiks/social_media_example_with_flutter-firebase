@@ -29,7 +29,8 @@ class MyApp extends StatelessWidget {
           titleTextStyle: TextStyle(
               color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        textTheme: const TextTheme(bodyText1: TextStyle(color: Colors.black)),
+        textTheme: const TextTheme(bodyText1: TextStyle(color: Colors.black),
+        caption: TextStyle(color: Colors.black)),
         inputDecorationTheme: const InputDecorationTheme(
             floatingLabelBehavior: FloatingLabelBehavior.never,
             focusedBorder: UnderlineInputBorder(
@@ -50,7 +51,8 @@ class MyApp extends StatelessWidget {
                 color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           ),
           textTheme:
-              const TextTheme(bodyText1: TextStyle(color: Colors.white)),
+              const TextTheme(bodyText1: TextStyle(color: Colors.white),
+              caption: TextStyle(color: Colors.white)),
                inputDecorationTheme: const InputDecorationTheme(
             floatingLabelBehavior: FloatingLabelBehavior.never,
             focusedBorder: UnderlineInputBorder(

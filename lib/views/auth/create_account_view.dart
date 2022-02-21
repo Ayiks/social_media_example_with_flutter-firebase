@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:familicious/managers/auth_manager.dart';
+import 'package:familicious/utilities/utilities.dart';
 import 'package:familicious/views/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,25 +38,8 @@ class _CreateAccountViewState extends State<CreateAccountView> {
 
   Future selectImage({ImageSource imageSource = ImageSource.camera}) async {
     XFile? selectedFile = await _imagePicker.pickImage(source: imageSource);
-    //File imageFile = File(selectedFile!.path);
-    File? croppedFile = await ImageCropper.cropImage(
-        sourcePath: selectedFile!.path,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
-        ],
-        androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: 'My cropper ',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        iosUiSettings: const IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ));
+    File? croppedFile = await myImageCropper(selectedFile!.path);
+    
 
     setState(() {
       _imageFile = croppedFile;
@@ -132,6 +116,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                 height: 35,
               ),
               TextFormField(
+                style: Theme.of(context).textTheme.caption,
                 controller: _nameController,
                 keyboardType: TextInputType.name,
                 textCapitalization: TextCapitalization.words,
@@ -149,6 +134,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                 height: 15,
               ),
               TextFormField(
+                style: Theme.of(context).textTheme.caption,
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 textCapitalization: TextCapitalization.words,
@@ -169,6 +155,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                 height: 15,
               ),
               TextFormField(
+                style: Theme.of(context).textTheme.caption,
                 controller: _passwordController,
                 keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(
@@ -187,7 +174,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
               const SizedBox(
                 height: 25,
               ),
-              _authManager.isLoading
+              _isLoading
                   ? Center(child: const CircularProgressIndicator.adaptive())
                   : TextButton(
                       onPressed: () async {

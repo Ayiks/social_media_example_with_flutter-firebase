@@ -1,4 +1,4 @@
-import 'dart:ffi';
+
 
 import 'package:familicious/views/auth/login_view.dart';
 import 'package:familicious/views/chat/chat_view.dart';
@@ -19,10 +19,10 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   int _currentIndex = 0;
   final List<Widget> _views = [
-    const TimeLineView(),
+     TimeLineView(),
     const ChatView(),
     const FavouriteView(),
-    const ProfileView()
+     ProfileView()
   ];
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 

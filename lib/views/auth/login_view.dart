@@ -39,6 +39,7 @@ class _LoginViewState extends State<LoginView> {
               height: 35,
             ),
             TextFormField(
+              style: Theme.of(context).textTheme.caption,
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               textCapitalization: TextCapitalization.words,
@@ -59,6 +60,7 @@ class _LoginViewState extends State<LoginView> {
               height: 15,
             ),
             TextFormField(
+              style: Theme.of(context).textTheme.caption,
               controller: _passwordController,
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(

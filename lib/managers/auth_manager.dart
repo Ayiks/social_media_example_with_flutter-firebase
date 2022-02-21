@@ -38,17 +38,18 @@ class AuthManager with ChangeNotifier {
     setIsLoading(true);
     await _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password)
-        .then((UserCredential) async {
+        .then((userCredential) async {
+    
       String? photoUrl = await _fileUploadServices.uploadFile(
-          file: imageFile, userUid: UserCredential.user!.uid);
+          file: imageFile, userUid: userCredential.user!.uid);
       if (photoUrl != null) {
         //add user to firebaser (name,email,photo,uid,createdAt)
-        userCollection.doc(UserCredential.user!.uid).set({
+        userCollection.doc(userCredential.user!.uid).set({
           "name": name,
           "email": email,
           "picture": photoUrl,
           "createdAt": FieldValue.serverTimestamp(),
-          "user_id": UserCredential.user!.uid
+          "user_id": userCredential.user!.uid
         });
         isCreated = true;
       } else {

@@ -32,6 +32,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             height: 35,
           ),
           TextFormField(
+            style: Theme.of(context).textTheme.caption,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             textCapitalization: TextCapitalization.words,
